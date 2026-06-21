@@ -1,0 +1,26 @@
+[
+  {
+    "name": "admin",
+    "path": "/admin",
+    "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\admin\\\\index.vue",
+    "chunkName": "pages/admin/index"
+  },
+  {
+    "name": "checkout",
+    "path": "/checkout",
+    "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\checkout\\\\index.vue",
+    "chunkName": "pages/checkout/index"
+  },
+  {
+    "name": "product-id",
+    "path": "/product/:id?",
+    "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\product\\\\_id.vue",
+    "chunkName": "pages/product/_id"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\index.vue",
+    "chunkName": "pages/index"
+  }
+]

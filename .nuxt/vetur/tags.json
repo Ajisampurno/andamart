@@ -1,0 +1,17 @@
+{
+  "AppFooter": {
+    "description": "Auto imported from components/AppFooter.vue"
+  },
+  "AppHeader": {
+    "description": "Auto imported from components/AppHeader.vue"
+  },
+  "CartDrawer": {
+    "description": "Auto imported from components/CartDrawer.vue"
+  },
+  "FilterBar": {
+    "description": "Auto imported from components/FilterBar.vue"
+  },
+  "ProductCard": {
+    "description": "Auto imported from components/ProductCard.vue"
+  }
+}
