@@ -16,20 +16,28 @@
         <div class="checkout-card">
           <h2 class="checkout-card-title">📋 Data Pemesan</h2>
           <div class="form-group">
-            <label for="co-name">Nama Lengkap</label>
-            <input id="co-name" v-model="form.name" class="form-control" placeholder="Contoh: Budi Santoso" />
-          </div>
-          <div class="form-group">
-            <label for="co-phone">Nomor HP / WhatsApp</label>
-            <input id="co-phone" v-model="form.phone" class="form-control" placeholder="08xxxxxxxxxx" type="tel" />
-          </div>
-          <div class="form-group">
-            <label for="co-address">Alamat Pengiriman</label>
-            <textarea id="co-address" v-model="form.address" class="form-control" placeholder="Jl. Contoh No. 1, Kelurahan, Kecamatan, Kota" rows="3"></textarea>
-          </div>
-          <div class="form-group">
             <label for="co-notes">Catatan Tambahan (opsional)</label>
             <input id="co-notes" v-model="form.notes" class="form-control" placeholder="Tanpa pedas, extra saus, dll" />
+          </div>
+
+          <div class="form-group">
+            <label for="delivery-date">Tanggal Pengiriman</label>
+            <input id="delivery-date" type="date" v-model="form.deliveryDate" @change="onDeliveryDateChange" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label>Dikirim jam berapa?</label>
+            <div class="time-options">
+              <label class="time-option" :class="{ disabled: isDisabled0730 }">
+                <input type="radio" v-model="form.deliveryTime" value="07:30" :disabled="isDisabled0730" />
+                <span>07:30</span>
+              </label>
+
+              <label class="time-option" :class="{ disabled: isDisabled1200 }">
+                <input type="radio" v-model="form.deliveryTime" value="12:00" :disabled="isDisabled1200" />
+                <span>12:00</span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -47,6 +55,31 @@
               <span class="payment-label">{{ opt.label }}</span>
               <span v-if="form.payment === opt.value" class="payment-check">✓</span>
             </label>
+          </div>
+          <div class="payment-detail-wrap">
+            <transition name="fade">
+              <div v-if="form.payment !== 'cod'" class="payment-detail">
+                <div v-if="form.payment === 'transfer'" class="payment-transfer">
+                  <div class="bank-name">{{ transferAccount.bank }}</div>
+                  <div class="bank-number">No. Rek: <strong>{{ transferAccount.number }}</strong></div>
+                  <div class="bank-owner">a.n. {{ transferAccount.name }}</div>
+                </div>
+
+                <div v-else-if="form.payment === 'ewallet'" class="payment-ewallet">
+                  <div>Nomor E-Wallet: <strong>{{ ewalletNumber }}</strong></div>
+                  <div class="muted">Gunakan nomor di atas untuk transfer GoPay / OVO</div>
+                </div>
+
+                <div v-else-if="form.payment === 'qris'" class="payment-qris">
+                  <img :src="qrisImage" alt="QRIS" class="qris-img" @error="onImgError" @click="openQris" />
+                  <div class="muted">Scan QR untuk melakukan pembayaran via mobile banking / e-wallet — klik gambar untuk memperbesar</div>
+                </div>
+              </div>
+
+              <div v-else class="payment-rules">
+                <p>Untuk Bayar di Tempat (COD): siapkan uang pas. Driver dapat meminta identitas atau konfirmasi ulang. Pesanan dapat dibatalkan jika tidak ada penerima.</p>
+              </div>
+            </transition>
           </div>
         </div>
       </div>
@@ -91,7 +124,7 @@
           >
             {{ submitted ? '✅ Pesanan Dikirim!' : '🚀 Konfirmasi Pesanan' }}
           </button>
-          <p v-if="!isFormValid" class="form-hint">* Lengkapi nama, HP, dan alamat terlebih dahulu</p>
+          <p v-if="!isFormValid" class="form-hint">* Lengkapi jam Pengiriman</p>
         </div>
       </div>
     </div>
@@ -110,6 +143,14 @@
         </button>
       </div>
     </div>
+
+    <!-- QRIS Modal -->
+    <div v-if="showQris" class="modal-overlay" @click.self="closeQris">
+      <div class="modal-box qris-modal">
+        <button class="btn btn-ghost close-btn" @click="closeQris">✕</button>
+        <img :src="qrisImage" alt="QRIS Large" class="qris-large" @error="onImgError" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -119,11 +160,10 @@ export default {
   data() {
     return {
       form: {
-        name: '',
-        phone: '',
-        address: '',
         notes: '',
-        payment: 'transfer'
+        payment: 'transfer',
+        deliveryTime: '',
+        deliveryDate: ''
       },
       paymentOptions: [
         { value: 'transfer', icon: '🏦', label: 'Transfer Bank' },
@@ -131,16 +171,42 @@ export default {
         { value: 'cod', icon: '💵', label: 'Bayar di Tempat (COD)' },
         { value: 'qris', icon: '📷', label: 'QRIS' }
       ],
+      // payment details
+      transferAccount: {
+        bank: 'BCA',
+        number: '123-456-7890',
+        name: 'PT FoodieHub'
+      },
+      ewalletNumber: '0812-3456-7890',
+      qrisImage: '/uploads/qris.jpeg',
       submitted: false,
       showSuccess: false,
+      showQris: false,
       orderId: ''
+      ,
+      currentMinutes: null
     }
   },
   computed: {
     cartItems() { return this.$store.getters['cart/cartItems'] },
     cartTotal() { return this.$store.getters['cart/cartTotal'] },
     isFormValid() {
-      return this.form.name.trim() && this.form.phone.trim() && this.form.address.trim()
+      return this.form.deliveryDate && this.form.deliveryTime
+    }
+    ,
+    isTodaySelected() {
+      if (!this.form.deliveryDate) return true
+      return this.form.deliveryDate === this.getTodayDate()
+    },
+    isDisabled0730() {
+      if (!this.isTodaySelected) return false
+      if (this.currentMinutes === null) return false
+      return this.currentMinutes > (7 * 60)
+    },
+    isDisabled1200() {
+      if (!this.isTodaySelected) return false
+      if (this.currentMinutes === null) return false
+      return this.currentMinutes > (12 * 60)
     }
   },
   methods: {
@@ -148,19 +214,74 @@ export default {
     onImgError(e) {
       e.target.src = 'https://picsum.photos/600/450'
     },
+    openQris() {
+      this.showQris = true
+    },
+    closeQris() {
+      this.showQris = false
+    },
     submitOrder() {
       if (!this.isFormValid) return
       this.submitted = true
       this.orderId = Math.random().toString(36).substr(2, 8).toUpperCase()
+      this.sendOrderToWhatsapp()
       setTimeout(() => {
         this.showSuccess = true
       }, 800)
+    },
+    sendOrderToWhatsapp() {
+      const number = '6283117764077'
+      const payments = this.paymentOptions
+        .find(opt => opt.value === this.form.payment)
+      const paymentLabel = payments ? payments.label : this.form.payment
+      const itemsText = this.cartItems.map(item => {
+        const price = (item.price * item.qty).toLocaleString('id-ID')
+        return `- ${item.name} x${item.qty}: Rp ${price}`
+      }).join('\n')
+
+      const text = [
+        `Halo, saya ingin konfirmasi pesanan berikut:`,
+        ``,
+        `Order ID: ${this.orderId}`,
+        `Tanggal Kirim: ${this.form.deliveryDate}`,
+        `Waktu Kirim: ${this.form.deliveryTime}`,
+        `Metode Pembayaran: ${paymentLabel}`,
+        `Catatan: ${this.form.notes || '-'}`,
+        `Rincian Pesanan:`,
+        itemsText,
+        `Subtotal: Rp ${this.cartTotal.toLocaleString('id-ID')}`
+      ].join('\n')
+
+      const url = `https://api.whatsapp.com/send?phone=${number}&text=${encodeURIComponent(text)}`
+      window.open(url, '_blank')
     },
     goHome() {
       this.$store.dispatch('cart/clearCart')
       this.showSuccess = false
       this.$router.push('/')
     }
+    ,
+    setCurrentMinutes() {
+      const d = new Date()
+      this.currentMinutes = d.getHours() * 60 + d.getMinutes()
+    },
+    getTodayDate() {
+      const d = new Date()
+      const yyyy = d.getFullYear()
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${yyyy}-${mm}-${dd}`
+    },
+    onDeliveryDateChange() {
+      // if selected date changes, clear deliveryTime if it becomes disabled
+      if (this.form.deliveryTime === '07:30' && this.isDisabled0730) this.form.deliveryTime = ''
+      if (this.form.deliveryTime === '12:00' && this.isDisabled1200) this.form.deliveryTime = ''
+    }
+  },
+  mounted() {
+    this.setCurrentMinutes()
+    // default delivery date to today
+    this.form.deliveryDate = this.getTodayDate()
   },
   head() {
     return { title: 'Checkout — FoodieHub' }
@@ -218,6 +339,34 @@ textarea.form-control { resize: vertical; }
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 800;
 }
+
+.time-options { display: flex; gap: 12px; margin-top: 8px; }
+.time-option {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.time-option input { margin-right: 6px; }
+.time-option.disabled { opacity: 0.5; cursor: not-allowed; }
+
+.payment-detail-wrap { margin-top: 12px; }
+.payment-detail { padding: 12px; border: 1px dashed var(--border); border-radius: var(--radius-sm); background: var(--bg-main); }
+.qris-img { max-width: 160px; height: auto; display: block; margin-bottom: 8px; }
+.bank-name { font-weight: 800; margin-bottom: 6px; }
+.bank-number { margin-bottom: 4px; }
+.bank-owner { color: var(--text-secondary); font-size: 13px; }
+.muted { color: var(--text-secondary); font-size: 13px; }
+
+.fade-enter-active, .fade-leave-active { transition: opacity .2s ease; }
+.fade-enter, .fade-leave-to { opacity: 0; }
+
+/* QRIS Modal */
+.qris-modal { text-align: center; max-width: 520px; position: relative; padding: 20px; }
+.qris-large { max-width: 100%; height: auto; border-radius: 8px; box-shadow: var(--shadow-lg); }
+.close-btn { position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 18px; cursor: pointer; }
+.qris-img { cursor: pointer; }
 
 .sticky-card { position: sticky; top: calc(var(--header-height) + 24px); }
 .summary-items { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
