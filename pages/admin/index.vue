@@ -262,8 +262,8 @@ export default {
           const ctx = canvas.getContext('2d')
           ctx.drawImage(img, 0, 0, width, height)
           
-          // Kompres menjadi JPEG 70% quality agar ukurannya sangat kecil (ringan)
-          this.form.image = canvas.toDataURL('image/jpeg', 0.7)
+          // Kompres menjadi WebP 80% quality agar ukurannya lebih kecil dan modern
+          this.form.image = canvas.toDataURL('image/webp', 0.8)
         }
         img.src = e.target.result
       }

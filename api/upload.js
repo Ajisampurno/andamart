@@ -23,7 +23,14 @@ export default function (req, res, next) {
           }
 
           const imageBuffer = Buffer.from(matches[2], 'base64')
-          const fileName = `img_${Date.now()}.jpg`
+          
+          // Tentukan ekstensi file berdasarkan mime type
+          const mimeType = matches[1]
+          let ext = 'jpg'
+          if (mimeType === 'image/webp') ext = 'webp'
+          else if (mimeType === 'image/png') ext = 'png'
+          
+          const fileName = `img_${Date.now()}.${ext}`
           
           // Ensure static/uploads directory exists
           const uploadDir = path.join(process.cwd(), 'static', 'uploads')
