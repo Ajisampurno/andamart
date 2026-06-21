@@ -119,7 +119,7 @@ export const fetchCart = async () => {
  * Add a new product to Google Sheet via Google Apps Script (Web App)
  * NOTE: Replace the URL below with your deployed Google Apps Script Web App URL
  */
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx08wi5LcoRMQSuF0h-X_1koJUcxorG3uHaE1yTpblsc0pp9ZfzsKNKFyq4XQw0SaUq/exec'
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby6nOcvVphhy3sr6BZOoqVi0u9PrbPIIKjYNQkJm_Ow9ctApmOI5c11m8H4y9y8YlJ-/exec'
 
 export const addProductToSheet = async (productData) => {
   try {

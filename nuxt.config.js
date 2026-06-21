@@ -26,5 +26,8 @@ export default {
   axios: {
     baseURL: '/'
   },
+  serverMiddleware: [
+    { path: '/api/upload', handler: '~/api/upload.js' }
+  ],
   build: {}
 }

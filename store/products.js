@@ -62,7 +62,7 @@ export const mutations = {
     const newId = product.id || (state.products.length > 0
       ? Math.max(...state.products.map(p => p.id)) + 1
       : 1)
-      
+
     state.products.push({
       ...product,
       id: newId
@@ -103,7 +103,7 @@ export const actions = {
       const newId = state.products.length > 0
         ? Math.max(...state.products.map(p => p.id)) + 1
         : 1
-        
+
       // Menambahkan id baru dan default values
       const newProduct = {
         ...product,
@@ -112,10 +112,26 @@ export const actions = {
         sold: 0,
         createdAt: new Date().toISOString().split('T')[0]
       }
-      
-      // Kirim ke Google Sheet (via Google Apps Script)
+
+      // Karena Google Drive menolak dijadikan tempat hosting gambar website (Error 403 & 429)
+      // Kita kembalikan ke sistem lokal yang terjamin 100% jalan di Laragon Anda.
+      if (newProduct.image && newProduct.image.startsWith('data:image')) {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: newProduct.image })
+        })
+        const resData = await response.json()
+        if (resData.url) {
+          newProduct.image = resData.url
+        } else {
+          throw new Error('Gagal upload ke server lokal')
+        }
+      }
+
+      // Kirim data ke Sheet
       await addProductToSheet(newProduct)
-      
+
       // Jika berhasil, update state Vuex
       commit('ADD_PRODUCT', newProduct)
     } catch (error) {
@@ -129,8 +145,23 @@ export const actions = {
   async updateProduct({ commit }, product) {
     commit('SET_LOADING', true)
     try {
-      await updateProductToSheet(product)
-      commit('UPDATE_PRODUCT', product)
+      const updatedProduct = { ...product }
+      if (updatedProduct.image && updatedProduct.image.startsWith('data:image')) {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: updatedProduct.image })
+        })
+        const resData = await response.json()
+        if (resData.url) {
+          updatedProduct.image = resData.url
+        } else {
+          throw new Error('Gagal upload ke server lokal')
+        }
+      }
+
+      await updateProductToSheet(updatedProduct)
+      commit('UPDATE_PRODUCT', updatedProduct)
     } catch (error) {
       console.error('Gagal update produk di sheet:', error)
       throw error

@@ -3,24 +3,28 @@
     "name": "admin",
     "path": "/admin",
     "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\admin\\\\index.vue",
-    "chunkName": "pages/admin/index"
+    "chunkName": "pages/admin/index",
+    "_name": "_c74e80da"
   },
   {
     "name": "checkout",
     "path": "/checkout",
     "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\checkout\\\\index.vue",
-    "chunkName": "pages/checkout/index"
+    "chunkName": "pages/checkout/index",
+    "_name": "_b90f40e8"
   },
   {
     "name": "product-id",
     "path": "/product/:id?",
     "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\product\\\\_id.vue",
-    "chunkName": "pages/product/_id"
+    "chunkName": "pages/product/_id",
+    "_name": "_2ffb9f1b"
   },
   {
     "name": "index",
     "path": "/",
     "component": "C:\\\\laragon\\\\www\\\\food-catalog\\\\pages\\\\index.vue",
-    "chunkName": "pages/index"
+    "chunkName": "pages/index",
+    "_name": "_742b2212"
   }
 ]

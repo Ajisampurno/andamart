@@ -233,13 +233,41 @@ export default {
 
     handleFileUpload(event) {
       const file = event.target.files[0]
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.form.image = e.target.result
+      if (!file) return
+      
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const MAX_WIDTH = 800
+          const MAX_HEIGHT = 800
+          let width = img.width
+          let height = img.height
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width
+              width = MAX_WIDTH
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height
+              height = MAX_HEIGHT
+            }
+          }
+
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          
+          // Kompres menjadi JPEG 70% quality agar ukurannya sangat kecil (ringan)
+          this.form.image = canvas.toDataURL('image/jpeg', 0.7)
         }
-        reader.readAsDataURL(file)
+        img.src = e.target.result
       }
+      reader.readAsDataURL(file)
     },
 
     openAddModal() {
