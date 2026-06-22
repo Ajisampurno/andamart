@@ -16,7 +16,7 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="cartItems.length === 0" class="cart-empty">
+        <div v-if="mounted && cartItems.length === 0" class="cart-empty">
           <div class="empty-icon">🛒</div>
           <h3>Keranjang Kosong</h3>
           <p>Yuk mulai pilih makanan favoritmu!</p>
@@ -26,7 +26,7 @@
         </div>
 
         <!-- Items -->
-        <div v-else class="cart-items">
+        <div v-else-if="mounted" class="cart-items">
           <div
             v-for="item in cartItems"
             :key="item.id"
@@ -71,11 +71,19 @@
 <script>
 export default {
   name: 'CartDrawer',
+  data() {
+    return {
+      mounted: false
+    }
+  },
   computed: {
     isOpen() { return this.$store.getters['cart/isOpen'] },
     cartItems() { return this.$store.getters['cart/cartItems'] },
     cartCount() { return this.$store.getters['cart/cartCount'] },
     cartTotal() { return this.$store.getters['cart/cartTotal'] }
+  },
+  mounted() {
+    this.mounted = true
   },
   methods: {
     close() { this.$store.dispatch('cart/closeCart') },
@@ -95,7 +103,7 @@ export default {
       return 'Rp ' + p.toLocaleString('id-ID')
     },
     onImgError(e) {
-      e.target.src = 'https://via.placeholder.com/80x80/FF6B35/ffffff?text=F'
+      e.target.src = 'https://picsum.photos/600/450'
     }
   }
 }

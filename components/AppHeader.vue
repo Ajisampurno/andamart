@@ -4,7 +4,7 @@
       <!-- Logo -->
       <nuxt-link to="/" class="logo">
         <span class="logo-icon">🍔</span>
-        <span class="logo-text">Dapur<span class="logo-accent">Anda</span></span>
+        <span class="logo-text">Anda<span class="logo-accent">Mart</span></span>
       </nuxt-link>
 
       <!-- Nav -->
@@ -20,7 +20,7 @@
       <button class="cart-btn" @click="toggleCart" id="cart-toggle-btn">
         <span class="cart-icon">🛒</span>
         <span class="cart-label">Keranjang</span>
-        <span v-if="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+        <span v-if="mounted && cartCount > 0" class="cart-badge">{{ cartCount }}</span>
       </button>
 
       <!-- Mobile menu toggle -->
@@ -45,12 +45,18 @@
 export default {
   name: 'AppHeader',
   data() {
-    return { mobileOpen: false }
+    return {
+      mobileOpen: false,
+      mounted: false
+    }
   },
   computed: {
     cartCount() {
       return this.$store.getters['cart/cartCount']
     }
+  },
+  mounted() {
+    this.mounted = true
   },
   methods: {
     toggleCart() {

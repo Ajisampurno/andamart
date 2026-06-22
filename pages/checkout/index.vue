@@ -3,15 +3,16 @@
     <h1 class="section-heading" style="margin-bottom:8px">💳 Checkout</h1>
     <p class="section-sub">Periksa pesanan dan isi data pengiriman</p>
 
-    <div v-if="cartItems.length === 0" class="empty-state">
-      <div class="empty-state-icon">🛒</div>
-      <h3>Keranjang Kosong</h3>
-      <p>Tambahkan produk ke keranjang terlebih dahulu</p>
-      <nuxt-link to="/" class="btn btn-primary" style="margin-top:16px">Lihat Katalog</nuxt-link>
-    </div>
+    <client-only>
+      <div v-if="cartItems.length === 0" class="empty-state">
+        <div class="empty-state-icon">🛒</div>
+        <h3>Keranjang Kosong</h3>
+        <p>Tambahkan produk ke keranjang terlebih dahulu</p>
+        <nuxt-link to="/" class="btn btn-primary" style="margin-top:16px">Lihat Katalog</nuxt-link>
+      </div>
 
-    <div v-else class="checkout-grid">
-      <!-- Form -->
+      <div v-else class="checkout-grid">
+        <!-- Form -->
       <div class="checkout-form-wrap">
         <div class="checkout-card">
           <h2 class="checkout-card-title">📋 Data Pemesan</h2>
@@ -58,26 +59,12 @@
           </div>
           <div class="payment-detail-wrap">
             <transition name="fade">
-              <div v-if="form.payment !== 'cod'" class="payment-detail">
-                <div v-if="form.payment === 'transfer'" class="payment-transfer">
-                  <div class="bank-name">{{ transferAccount.bank }}</div>
-                  <div class="bank-number">No. Rek: <strong>{{ transferAccount.number }}</strong></div>
-                  <div class="bank-owner">a.n. {{ transferAccount.name }}</div>
-                </div>
-
-                <div v-else-if="form.payment === 'ewallet'" class="payment-ewallet">
-                  <div>Nomor E-Wallet: <strong>{{ ewalletNumber }}</strong></div>
-                  <div class="muted">Gunakan nomor di atas untuk transfer GoPay / OVO</div>
-                </div>
-
-                <div v-else-if="form.payment === 'qris'" class="payment-qris">
-                  <img :src="qrisImage" alt="QRIS" class="qris-img" @error="onImgError" @click="openQris" />
-                  <div class="muted">Scan QR untuk melakukan pembayaran via mobile banking / e-wallet — klik gambar untuk memperbesar</div>
-                </div>
+              <div v-if="form.payment === 'qris'" class="payment-qris">
+                <img :src="qrisImage" alt="QRIS" class="qris-img" @error="onImgError" @click="openQris" />
+                <div class="muted">Scan QR untuk melakukan pembayaran via mobile banking / e-wallet — klik gambar untuk memperbesar</div>
               </div>
-
               <div v-else class="payment-rules">
-                <p>Untuk Bayar di Tempat (COD): siapkan uang pas. Driver dapat meminta identitas atau konfirmasi ulang. Pesanan dapat dibatalkan jika tidak ada penerima.</p>
+                <p>Untuk Bayar di Tempat (COD): siapkan uang pas apabila tunai. Driver dapat meminta identitas atau konfirmasi ulang. Pesanan dapat dibatalkan jika tidak ada penerima.</p>
               </div>
             </transition>
           </div>
@@ -127,9 +114,9 @@
           <p v-if="!isFormValid" class="form-hint">* Lengkapi jam Pengiriman</p>
         </div>
       </div>
-    </div>
+      </div>
 
-    <!-- Success Modal -->
+      <!-- Success Modal -->
     <div v-if="showSuccess" class="modal-overlay" @click.self="goHome">
       <div class="modal-box success-modal">
         <div class="success-icon">🎉</div>
@@ -151,6 +138,7 @@
         <img :src="qrisImage" alt="QRIS Large" class="qris-large" @error="onImgError" />
       </div>
     </div>
+    </client-only>
   </div>
 </template>
 
@@ -166,18 +154,9 @@ export default {
         deliveryDate: ''
       },
       paymentOptions: [
-        { value: 'transfer', icon: '🏦', label: 'Transfer Bank' },
-        { value: 'ewallet', icon: '📱', label: 'E-Wallet (GoPay/OVO)' },
         { value: 'cod', icon: '💵', label: 'Bayar di Tempat (COD)' },
         { value: 'qris', icon: '📷', label: 'QRIS' }
       ],
-      // payment details
-      transferAccount: {
-        bank: 'BCA',
-        number: '123-456-7890',
-        name: 'PT FoodieHub'
-      },
-      ewalletNumber: '0812-3456-7890',
       qrisImage: '/uploads/qris.jpeg',
       submitted: false,
       showSuccess: false,
@@ -192,8 +171,7 @@ export default {
     cartTotal() { return this.$store.getters['cart/cartTotal'] },
     isFormValid() {
       return this.form.deliveryDate && this.form.deliveryTime
-    }
-    ,
+    },
     isTodaySelected() {
       if (!this.form.deliveryDate) return true
       return this.form.deliveryDate === this.getTodayDate()
@@ -284,7 +262,7 @@ export default {
     this.form.deliveryDate = this.getTodayDate()
   },
   head() {
-    return { title: 'Checkout — FoodieHub' }
+    return { title: 'Checkout — Andamart' }
   }
 }
 </script>

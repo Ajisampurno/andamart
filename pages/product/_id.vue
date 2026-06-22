@@ -125,12 +125,12 @@ export default {
       return 'Rp ' + p.toLocaleString('id-ID')
     },
     onImgError(e) {
-      e.target.src = 'https://via.placeholder.com/600x450/FF6B35/ffffff?text=FoodieHub'
+      e.target.src = 'https://picsum.photos/600/450'
     }
   },
   head() {
     return {
-      title: this.product ? `${this.product.name} — FoodieHub` : 'Produk — FoodieHub'
+      title: this.product ? `${this.product.name} — Andamart` : 'Produk — Andamart'
     }
   }
 }

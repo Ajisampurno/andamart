@@ -68,7 +68,7 @@ export const mutations = {
 export const actions = {
   initCart({ commit }) {
     try {
-      const saved = localStorage.getItem('foodiehub_cart')
+      const saved = localStorage.getItem('andamart_cart')
       if (saved) {
         commit('SET_ITEMS', JSON.parse(saved))
       }
@@ -77,22 +77,22 @@ export const actions = {
 
   addToCart({ commit, state }, product) {
     commit('ADD_ITEM', product)
-    localStorage.setItem('foodiehub_cart', JSON.stringify(state.items))
+    localStorage.setItem('andamart_cart', JSON.stringify(state.items))
   },
 
   removeFromCart({ commit, state }, productId) {
     commit('REMOVE_ITEM', productId)
-    localStorage.setItem('foodiehub_cart', JSON.stringify(state.items))
+    localStorage.setItem('andamart_cart', JSON.stringify(state.items))
   },
 
   updateQty({ commit, state }, payload) {
     commit('UPDATE_QTY', payload)
-    localStorage.setItem('foodiehub_cart', JSON.stringify(state.items))
+    localStorage.setItem('andamart_cart', JSON.stringify(state.items))
   },
 
   clearCart({ commit }) {
     commit('CLEAR_CART')
-    localStorage.removeItem('foodiehub_cart')
+    localStorage.removeItem('andamart_cart')
   },
 
   toggleCart({ commit }) {
