@@ -1,10 +1,10 @@
 export default {
   head: {
-    title: 'FoodieHub — Katalog Makanan & Minuman',
+    title: 'AndaMart — Katalog Makanan & Minuman',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Temukan makanan, minuman, dan cemilan favoritmu dengan harga terbaik di FoodieHub.' }
+      { hid: 'description', name: 'description', content: 'Temukan makanan, minuman, dan cemilan favoritmu dengan harga terbaik di AndaMart.' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

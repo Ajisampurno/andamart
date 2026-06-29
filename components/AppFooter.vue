@@ -2,7 +2,7 @@
   <footer class="app-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <span class="footer-logo">🍔 FoodieHub</span>
+        <span class="footer-logo">🍔 AndaMart</span>
         <p class="footer-tagline">Temukan makanan, minuman & cemilan favoritmu</p>
       </div>
       <div class="footer-links">
@@ -10,9 +10,9 @@
         <nuxt-link to="/?cat=makanan">Makanan</nuxt-link>
         <nuxt-link to="/?cat=minuman">Minuman</nuxt-link>
         <nuxt-link to="/?cat=cemilan">Cemilan</nuxt-link> -->
-        <!-- <nuxt-link to="/admin">Admin</nuxt-link> -->
+        <nuxt-link to="/admin">Admin</nuxt-link>
       </div>
-      <p class="footer-copy">© {{ year }} FoodieHub. Dibuat dengan ❤️</p>
+      <p class="footer-copy">© {{ year }} AndaMart. Dibuat dengan ❤️</p>
     </div>
   </footer>
 </template>

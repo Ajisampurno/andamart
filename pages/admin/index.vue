@@ -307,7 +307,7 @@ export default {
     }
   },
   head() {
-    return { title: 'Admin Panel — FoodieHub' }
+    return { title: 'Admin Panel — AndaMart' }
   }
 }
 </script>

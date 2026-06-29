@@ -11,7 +11,7 @@
             <span class="gradient-text">Favoritmu</span> Sekarang!
           </h1>
           <p class="hero-desc">
-            Dari makanan berat, minuman segar, hingga cemilan lezat — semua ada di FoodieHub. Harga terjangkau, rasa tidak mengecewakan!
+            Dari makanan berat, minuman segar, hingga cemilan lezat — semua ada di AndaMart. Harga terjangkau, rasa tidak mengecewakan!
           </p>
           <div class="hero-actions">
             <button class="btn btn-primary btn-lg" @click="scrollToProducts" id="hero-cta-btn">
@@ -124,9 +124,9 @@ export default {
   },
   head() {
     return {
-      title: 'FoodieHub — Katalog Makanan, Minuman & Cemilan',
+      title: 'AndaMart — Katalog Makanan, Minuman & Cemilan',
       meta: [
-        { hid: 'description', name: 'description', content: 'Temukan 30+ menu makanan, minuman, dan cemilan terlezat di FoodieHub.' }
+        { hid: 'description', name: 'description', content: 'Temukan 30+ menu makanan, minuman, dan cemilan terlezat di AndaMart.' }
       ]
     }
   }
