@@ -6,11 +6,11 @@
         <p class="footer-tagline">Temukan makanan, minuman & cemilan favoritmu</p>
       </div>
       <div class="footer-links">
-        <nuxt-link to="/">Katalog</nuxt-link>
+        <!-- <nuxt-link to="/">Katalog</nuxt-link>
         <nuxt-link to="/?cat=makanan">Makanan</nuxt-link>
         <nuxt-link to="/?cat=minuman">Minuman</nuxt-link>
-        <nuxt-link to="/?cat=cemilan">Cemilan</nuxt-link>
-        <nuxt-link to="/admin">Admin</nuxt-link>
+        <nuxt-link to="/?cat=cemilan">Cemilan</nuxt-link> -->
+        <!-- <nuxt-link to="/admin">Admin</nuxt-link> -->
       </div>
       <p class="footer-copy">© {{ year }} FoodieHub. Dibuat dengan ❤️</p>
     </div>

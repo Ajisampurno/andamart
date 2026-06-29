@@ -9,10 +9,10 @@
 
       <!-- Nav -->
       <nav class="nav-links">
-        <nuxt-link to="/" class="nav-link" exact>Katalog</nuxt-link>
+        <!-- <nuxt-link to="/" class="nav-link" exact>Katalog</nuxt-link>
         <nuxt-link to="/?cat=makanan" class="nav-link">🍽 Makanan</nuxt-link>
         <nuxt-link to="/?cat=minuman" class="nav-link">🥤 Minuman</nuxt-link>
-        <nuxt-link to="/?cat=cemilan" class="nav-link">🍿 Cemilan</nuxt-link>
+        <nuxt-link to="/?cat=cemilan" class="nav-link">🍿 Cemilan</nuxt-link> -->
         <nuxt-link to="/admin" class="nav-link nav-admin">⚙️ Admin</nuxt-link>
       </nav>
 
